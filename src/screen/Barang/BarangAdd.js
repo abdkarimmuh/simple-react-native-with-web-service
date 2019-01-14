@@ -11,10 +11,12 @@ import {
     Label,
     Title,
     Left,
-    Input
+    Input,
+    Picker,
+    Text
 } from 'native-base';
 
-import Api from '../services/api';
+import Api from '../../services/api';
 
 class BarangDetail extends Component {
 
@@ -22,9 +24,11 @@ class BarangDetail extends Component {
         super(props)
         this.state = {
             kategori: [],
+            id: '',
             name: '',
-            count: 0,
-            error: false
+            count: '',
+            selected: '',
+            error: false,
         }
     }
 
@@ -32,11 +36,33 @@ class BarangDetail extends Component {
         this.getKategori()
     }
 
+    onValueChange(value) {
+        this.setState({
+            selected: value
+        });
+    }
+
+    pressGoBack = () => {
+        this.setState({
+            id: '',
+            name: '',
+            count: '',
+            selected: '',
+        })
+        this.props.navigation.goBack()
+    }
+    
     postBarang = (name, count, idKategori) => {
         Api.create()
         .addBarang(name, count, idKategori)
         .then(res => {
             this.props.navigation.navigate("Barang")
+            this.setState({
+                id: '',
+                name: '',
+                count: '',
+                selected: '',
+            })
         })
         .catch(err => {
             console.log('ERR', err)
@@ -61,14 +87,14 @@ class BarangDetail extends Component {
     }
 
     render() {
-        const { kategori } = this.state;
+        const { kategori, name, count, selected } = this.state;
         return (
             <Container>
                 <Header>
                     <Left>
                         <Button transparent
                             onPress = {() =>
-                                this.props.navigation.goBack()
+                                this.pressGoBack()
                             }>
                             <Icon name='arrow-back' />
                         </Button>
@@ -77,24 +103,41 @@ class BarangDetail extends Component {
                         <Title>{this.props.navigation.state.params.title}</Title>
                     </Body>
                 </Header>
-                <Content>
+                <Content padder>
                     <Form>
                         <Item floatingLabel>
                             <Label>Nama Barang</Label>
                             <Input 
                                 onChangeText = { (name) => this.setState({ name }) }
-                                value = { this.state.name }/>
+                                value = { name }/>
                         </Item>
                         <Item floatingLabel last>
                             <Label>Jumlah</Label>
                             <Input 
+                                keyboardType = {'number-pad'}
                                 onChangeText = { (count) => this.setState({ count }) }
-                                value = { this.state.count }/>
+                                value = { count }/>
                         </Item>
+                        <Picker
+                            mode = 'dropdown'
+                            iosIcon = { <Icon name = 'arrow-down' /> }
+                            placeholder = 'Pilih Kategori'
+                            placeholderStyle = {{ color: '#bfc6ea' }}
+                            placeholderIconColor = '#007aff'
+                            style = {{ width: undefined, marginTop: 16 }}
+                            selectedValue = { selected }
+                            onValueChange = { this.onValueChange.bind(this) }
+                        >
+                        {
+                            kategori.map((d) => (
+                                <Picker.Item label = {d.name} value = {d.id} key = {d.id} />
+                            ))
+                        }
+                        </Picker>
                     </Form>
                     <Body style = {{ marginTop: 32 }} >
                         <Button iconLeft primary
-                            onPress = { () => this.postKategori(this.state.name) }>
+                            onPress = { () => this.postBarang(name, count, selected) }>
                             <Icon name='checkmark' />
                             <Text>Save</Text>
                         </Button>

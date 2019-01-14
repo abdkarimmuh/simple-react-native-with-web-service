@@ -13,7 +13,11 @@ import {
     Title,
 } from 'native-base';
 
-import Api from '../services/api';
+import { 
+    AsyncStorage, 
+} from 'react-native'; 
+
+import Api from '../../services/api';
 
 class Barang extends Component {
 
@@ -21,16 +25,39 @@ class Barang extends Component {
         super(props)
         this.state = {
             data: [],
+            id: '',
             error: false
         }
     }
 
     componentDidMount = () => {
-        this.getBarang();
+        this.getBarang()
     }
 
     pressAdd = () => {
-        this.props.navigation.navigate("BarangDetail", { title:"Tambah Barang" })
+        console.log('onAddBarang')
+        this.props.navigation.navigate("BarangAdd", { title:"Tambah Barang" })
+    }
+
+    pressEdit = (id) => {
+        console.log('onEditBarang: ' + id)
+        this._storeId(id + '');
+        this.props.navigation.navigate("BarangEdit", { title:"Edit Kategori" })
+    }
+
+    pressRefresh = () => {
+        console.log('onRefreshBarang')
+        this.getBarang()
+    }
+
+    _storeId = async (id) => {
+        try {
+            await AsyncStorage.setItem('idBarang', id)
+            console.log ('ID yang dikirim : ' + id)
+            this.setState({ id : id }) 
+        } catch (error) {
+            console.log('ERR', error)
+        }
     }
 
     getBarang = async() => {
@@ -45,6 +72,21 @@ class Barang extends Component {
                 error: true
             })
         })
+    }
+
+    delBarang = async(id) => {
+        Api.create()
+        .delBarang(id)
+        .then(res => {
+            console.log('onDeleteBarang: ' + id)
+        })
+        .catch(err => {
+            console.log('ERR', err)
+            this.setState({
+                error: true
+            })
+        })
+        this.pressRefresh()
     }
 
     render() {
@@ -62,9 +104,9 @@ class Barang extends Component {
                         }>
                             <Icon name='add' />
                         </Button>
-                        <Button
+                        <Button transparent
                             onPress = { () => 
-                                this.getBarang()
+                                this.pressRefresh()
                             }>
                             <Icon name='refresh' />
                         </Button>
@@ -81,10 +123,16 @@ class Barang extends Component {
                             </Body>
                             <Right>
                                 <Body style = {{ flexDirection: 'row', alignContent: 'flex-start'}}>
-                                    <Button warning transparent>
+                                    <Button warning transparent
+                                        onPress = { () =>
+                                            this.pressEdit(d.id)
+                                        }>
                                         <Icon name='create' />
                                     </Button>
-                                    <Button danger transparent>
+                                    <Button danger transparent
+                                        onPress = { () =>
+                                            this.delBarang(d.id)
+                                        }>
                                         <Icon name='close' />
                                     </Button>
                                 </Body>

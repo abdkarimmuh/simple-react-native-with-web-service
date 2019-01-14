@@ -13,7 +13,7 @@ import {
     Right
 } from 'native-base';
 
-import Api from '../services/api';
+import Api from '../../services/api';
 
 class Kategori extends Component {
 
@@ -63,7 +63,7 @@ class Kategori extends Component {
                             }>
                             <Icon name='add' />
                         </Button>
-                        <Button
+                        <Button transparent
                             onPress = { () => 
                                 this.getKategori()
                             }>

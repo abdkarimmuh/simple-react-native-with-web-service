@@ -15,9 +15,9 @@ import {
     Title
 } from 'native-base';
 
-import Api from '../services/api';
+import Api from '../../services/api';
 
-class Barang extends Component {
+class KategoriDetail extends Component {
 
     constructor(props){
         super(props)
@@ -52,7 +52,7 @@ class Barang extends Component {
                     <Left>
                         <Button transparent
                             onPress = {() =>
-                                this.props.navigation.goBack()
+                                this.props.navigation.navigate("Kategori")
                             }>
                             <Icon name='arrow-back' />
                         </Button>
@@ -83,4 +83,4 @@ class Barang extends Component {
     }
 }
 
-export default Barang;
+export default KategoriDetail;

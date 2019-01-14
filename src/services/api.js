@@ -8,7 +8,6 @@ const create = (baseURL = Config.baseUrl) => {
     //GET
     const getBarangAll = () => api.get(`barang/`)
     const getBarangId = (id) => api.get(`barang/${id}`)
-    const searchBarang = (nama) => api.get(`barang?name=${nama}`)
     const getKategori = () => api.get(`kategori/`)
     
 
@@ -17,10 +16,14 @@ const create = (baseURL = Config.baseUrl) => {
     const addKategori = (nama) => api.post(`kategori/?key=${Config.key}`, {name: nama})
 
     //PUT
-    // const editBarang = (id, nama) => api.put('/barang/' + id + '?name=')
+    const editBarang = (id, nama, jumlah, kategori) => api.put(`barang/${id}?key=${Config.key}`, {name: nama, count: jumlah, id_kategori: kategori})
+    const editKategori = (id, nama) => api.put(`kategori/${id}?name=${nama}?key=${Config.key}`)
+
+    //DELETE
+    const delBarang = (id) => api.delete(`barang/${id}?key=${Config.key}`)
 
     return {
-        getBarangAll, getBarangId, searchBarang, addBarang, getKategori, addKategori
+        getBarangAll, getBarangId, addBarang, editBarang, delBarang, getKategori, addKategori, editKategori
     }
 }
 
