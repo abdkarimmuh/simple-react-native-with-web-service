@@ -56,6 +56,7 @@ class BarangDetail extends Component {
         Api.create()
         .addBarang(name, count, idKategori)
         .then(res => {
+            console.log('Upload : '+ name + ' ' + count + ' ' + idKategori)
             this.props.navigation.navigate('Barang')
             this.setState({
                 id: '',

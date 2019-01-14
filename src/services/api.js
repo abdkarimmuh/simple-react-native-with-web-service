@@ -18,14 +18,16 @@ const create = (baseURL = Config.baseUrl) => {
 
     //PUT
     const editBarang = (id, nama, jumlah, kategori) => api.put(`barang/${id}?key=${Config.key}`, {name: nama, count: jumlah, id_kategori: kategori})
-    const editKategori = (id, nama) => api.put(`kategori/${id}?name=${nama}?key=${Config.key}`, {name: nama})
+    const editKategori = (id, nama) => api.put(`kategori/${id}?key=${Config.key}`, {name: nama})
 
     //DELETE
     const delBarang = (id) => api.delete(`barang/${id}?key=${Config.key}`)
+    const delKategori = (id) => api.delete(`kategori/${id}?key=${Config.key}`)
+
 
     return {
         getBarang, getBarangById, addBarang, editBarang, delBarang, 
-        getKategori, getKategoriById, addKategori, editKategori
+        getKategori, getKategoriById, addKategori, editKategori, delKategori
     }
 }
 

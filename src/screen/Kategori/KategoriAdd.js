@@ -43,6 +43,9 @@ class KategoriAdd extends Component {
         .addKategori(name)
         .then(res => {
             this.props.navigation.navigate('Kategori')
+            this.setState({
+                name: ''
+            })
         })
         .catch(err => {
             console.log('ERR', err)

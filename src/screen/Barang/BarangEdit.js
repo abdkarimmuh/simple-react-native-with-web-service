@@ -37,12 +37,13 @@ class BarangDetail extends Component {
     }
 
     componentDidMount = () => {
-        this.getKategori()
         this._retrieveData()
+        this.getKategori()
     }
 
     componentWillReceiveProps = () => {
         this._retrieveData()
+        this.getKategori()
     }
 
     onValueChange(value) {

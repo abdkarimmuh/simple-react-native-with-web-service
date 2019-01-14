@@ -58,6 +58,21 @@ class Kategori extends Component {
         }
     }
 
+    delKategori = async(id) => {
+        Api.create()
+        .delKategori(id)
+        .then(res => {
+            console.log('onDeleteBarang: ' + id)
+        })
+        .catch(err => {
+            console.log('ERR', err)
+            this.setState({
+                error: true
+            })
+        })
+        this.pressRefresh()
+    }
+
     getKategori = async() => {
         Api.create()
         .getKategori()
@@ -111,7 +126,10 @@ class Kategori extends Component {
                                         }>
                                         <Icon name='create' />
                                     </Button>
-                                    <Button danger transparent>
+                                    <Button danger transparent
+                                        onPress = { () =>
+                                            this.delKategori(d.id)
+                                        }>
                                         <Icon name='close' />
                                     </Button>
                                 </Body>
