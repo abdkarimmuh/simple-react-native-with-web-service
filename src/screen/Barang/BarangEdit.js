@@ -58,14 +58,26 @@ class BarangDetail extends Component {
             count: '',
             selected: '',
         })
-        this.props.navigation.navigate("Barang")
+        this.props.navigation.navigate('Barang')
+    }
+
+    _retrieveData = async() => {
+        try {
+            const value = await AsyncStorage.getItem('idBarang');
+            console.log('ID yang diterima: ' + value)
+            if (value !== null) {
+                this.getBarangById(value);
+            }
+        } catch (error) {
+            console.log('ERR', error)
+        }
     }
     
     putBarang = (id, nama, jumlah, kategori) => {
         Api.create()
         .editBarang(id, nama, jumlah, kategori)
         .then(res => {
-            this.props.navigation.navigate("Barang")
+            this.props.navigation.navigate('Barang')
         })
         .catch(err => {
             console.log('ERR', err)
@@ -75,21 +87,9 @@ class BarangDetail extends Component {
         })
     }
 
-    _retrieveData = async() => {
-        try {
-            const value = await AsyncStorage.getItem('idBarang');
-            console.log('ID yang diterima ' + value)
-            if (value !== null) {
-                this.getBarangById(value);
-            }
-        } catch (error) {
-            console.log('ERR', error)
-        }
-    }
-
     getBarangById = async(id) => {
         Api.create()
-        .getBarangId(id)
+        .getBarangById(id)
         .then(res => {
             this.setState({ 
                 id: res.data.data.id + '',

@@ -56,7 +56,7 @@ class BarangDetail extends Component {
         Api.create()
         .addBarang(name, count, idKategori)
         .then(res => {
-            this.props.navigation.navigate("Barang")
+            this.props.navigation.navigate('Barang')
             this.setState({
                 id: '',
                 name: '',

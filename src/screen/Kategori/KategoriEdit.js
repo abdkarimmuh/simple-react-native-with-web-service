@@ -15,27 +15,73 @@ import {
     Title
 } from 'native-base';
 
+import { 
+    AsyncStorage, 
+} from 'react-native'; 
+
 import Api from '../../services/api';
 
-class KategoriDetail extends Component {
+class KategoriEdit extends Component {
 
     constructor(props){
         super(props)
         this.state = {
             name: '',
+            id: '',
             error: false
         }
     }
 
     componentDidMount = () => {
-        
+        this._retrieveData()
     }
 
-    postKategori = (name) => {
+    componentWillReceiveProps = () => {
+        this._retrieveData()
+    }
+
+    pressGoBack = () => {
+        this.setState({
+            id: '',
+            name: ''
+        })
+        this.props.navigation.navigate('Kategori')
+    }
+
+    _retrieveData = async() => {
+        try {
+            const value = await AsyncStorage.getItem('idKategori');
+            console.log('ID yang diterima: ' + value)
+            if (value !== null) {
+                this.getKategoriById(value);
+            }
+        } catch (error) {
+            console.log('ERR', error)
+        }
+    }
+    
+    putKategori = (id, nama) => {
         Api.create()
-        .addKategori(name)
+        .editKategori(id, nama)
         .then(res => {
-            this.props.navigation.navigate("Kategori")
+            this.props.navigation.navigate('Kategori')
+        })
+        .catch(err => {
+            console.log('ERR', err)
+            this.setState({
+                error: true
+            })
+        })
+    }
+
+    getKategoriById = async(id) => {
+        Api.create()
+        .getKategoriById(id)
+        .then(res => {
+            this.setState({
+                id: res.data.data.id,
+                name: res.data.data.name
+            })
         })
         .catch(err => {
             console.log('ERR', err)
@@ -46,6 +92,7 @@ class KategoriDetail extends Component {
     }
 
     render() {
+        const { id, name } = this.state;
         return (
             <Container>
                 <Header>
@@ -67,12 +114,12 @@ class KategoriDetail extends Component {
                             <Label>Kategori</Label>
                             <Input 
                                 onChangeText = { (name) => this.setState({ name }) }
-                                value = { this.state.name }/>
+                                value = { name }/>
                         </Item>
                     </Form>
                     <Body style = {{ marginTop: 32 }} >
                         <Button iconLeft primary
-                            onPress = { () => this.postKategori(this.state.name) }>
+                            onPress = { () => this.putKategori(id, name) }>
                             <Icon name='checkmark' />
                             <Text>Save</Text>
                         </Button>
@@ -83,4 +130,4 @@ class KategoriDetail extends Component {
     }
 }
 
-export default KategoriDetail;
+export default KategoriEdit;

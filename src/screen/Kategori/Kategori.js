@@ -13,6 +13,10 @@ import {
     Right
 } from 'native-base';
 
+import { 
+    AsyncStorage, 
+} from 'react-native'; 
+
 import Api from '../../services/api';
 
 class Kategori extends Component {
@@ -21,8 +25,7 @@ class Kategori extends Component {
         super(props)
         this.state = {
             data: [],
-            error: false,
-            isLoading: false
+            error: false
         }
     }
 
@@ -31,7 +34,28 @@ class Kategori extends Component {
     }
 
     pressAdd = () => {
-        this.props.navigation.navigate("KategoriDetail", { title:"Tambah Kategori" })
+        console.log('onAddKategori')
+        this.props.navigation.navigate('KategoriAdd', { title:'Tambah Kategori' })
+    }
+
+    pressEdit = (id) => {
+        console.log('onEditKategori: ' + id)
+        this._storeId(id + '');
+        this.props.navigation.navigate('KategoriEdit', { title:'Edit Kategori' })
+    }
+
+    pressRefresh = () => {
+        console.log('onRefreshKategori')
+        this.getKategori()
+    }
+
+    _storeId = async (id) => {
+        try {
+            await AsyncStorage.setItem('idKategori', id)
+            console.log ('ID yang dikirim: ' + id)
+        } catch (error) {
+            console.log('ERR', error)
+        }
     }
 
     getKategori = async() => {
@@ -65,7 +89,7 @@ class Kategori extends Component {
                         </Button>
                         <Button transparent
                             onPress = { () => 
-                                this.getKategori()
+                                this.pressRefresh()
                             }>
                             <Icon name='refresh' />
                         </Button>
@@ -81,7 +105,10 @@ class Kategori extends Component {
                             </Body>
                             <Right>
                                 <Body style = {{ flexDirection: 'row', alignContent: 'flex-start'}}>
-                                    <Button warning transparent>
+                                    <Button warning transparent
+                                        onPress = { () =>
+                                            this.pressEdit(d.id)
+                                        }>
                                         <Icon name='create' />
                                     </Button>
                                     <Button danger transparent>

@@ -6,9 +6,10 @@ const create = (baseURL = Config.baseUrl) => {
     const api = apisauce.create({baseURL})
 
     //GET
-    const getBarangAll = () => api.get(`barang/`)
-    const getBarangId = (id) => api.get(`barang/${id}`)
+    const getBarang = () => api.get(`barang/`)
+    const getBarangById = (id) => api.get(`barang/${id}`)
     const getKategori = () => api.get(`kategori/`)
+    const getKategoriById = (id) =>  api.get(`kategori/${id}`)
     
 
     //POST
@@ -17,13 +18,14 @@ const create = (baseURL = Config.baseUrl) => {
 
     //PUT
     const editBarang = (id, nama, jumlah, kategori) => api.put(`barang/${id}?key=${Config.key}`, {name: nama, count: jumlah, id_kategori: kategori})
-    const editKategori = (id, nama) => api.put(`kategori/${id}?name=${nama}?key=${Config.key}`)
+    const editKategori = (id, nama) => api.put(`kategori/${id}?name=${nama}?key=${Config.key}`, {name: nama})
 
     //DELETE
     const delBarang = (id) => api.delete(`barang/${id}?key=${Config.key}`)
 
     return {
-        getBarangAll, getBarangId, addBarang, editBarang, delBarang, getKategori, addKategori, editKategori
+        getBarang, getBarangById, addBarang, editBarang, delBarang, 
+        getKategori, getKategoriById, addKategori, editKategori
     }
 }
 

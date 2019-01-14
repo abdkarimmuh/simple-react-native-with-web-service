@@ -25,7 +25,6 @@ class Barang extends Component {
         super(props)
         this.state = {
             data: [],
-            id: '',
             error: false
         }
     }
@@ -36,13 +35,13 @@ class Barang extends Component {
 
     pressAdd = () => {
         console.log('onAddBarang')
-        this.props.navigation.navigate("BarangAdd", { title:"Tambah Barang" })
+        this.props.navigation.navigate('BarangAdd', { title:'Tambah Barang' })
     }
 
     pressEdit = (id) => {
         console.log('onEditBarang: ' + id)
         this._storeId(id + '');
-        this.props.navigation.navigate("BarangEdit", { title:"Edit Kategori" })
+        this.props.navigation.navigate('BarangEdit', { title:'Edit Barang' })
     }
 
     pressRefresh = () => {
@@ -53,8 +52,7 @@ class Barang extends Component {
     _storeId = async (id) => {
         try {
             await AsyncStorage.setItem('idBarang', id)
-            console.log ('ID yang dikirim : ' + id)
-            this.setState({ id : id }) 
+            console.log ('ID yang dikirim: ' + id)
         } catch (error) {
             console.log('ERR', error)
         }
@@ -62,7 +60,7 @@ class Barang extends Component {
 
     getBarang = async() => {
         Api.create()
-        .getBarangAll()
+        .getBarang()
         .then(res => {
             this.setState({ data: res.data.data })
         })

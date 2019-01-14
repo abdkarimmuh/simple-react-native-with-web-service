@@ -11,7 +11,8 @@ import Barang from './Barang/Barang';
 import BarangAdd from './Barang/BarangAdd';
 import BarangEdit from './Barang/BarangEdit';
 import Kategori from './Kategori/Kategori';
-import KategoriDetail from './Kategori/KategoriDetail';
+import KategoriAdd from './Kategori/KategoriAdd';
+import KategoriEdit from './Kategori/KategoriEdit';
 
 const Main = createBottomTabNavigator(
     
@@ -20,7 +21,8 @@ const Main = createBottomTabNavigator(
         BarangAdd: { screen: BarangAdd },
         BarangEdit: { screen: BarangEdit },
         Kategori: { screen: Kategori },
-        KategoriDetail: { screen: KategoriDetail },
+        KategoriAdd: { screen: KategoriAdd },
+        KategoriEdit: { screen: KategoriEdit },
     },
     {
         tabBarPosition: 'bottom',
