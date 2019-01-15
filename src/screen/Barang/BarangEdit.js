@@ -149,7 +149,7 @@ class BarangEdit extends Component {
                                 onChangeText = { (name) => this.setState({ name }) }
                                 value = { name }/>
                         </Item>
-                        <Item floatingLabel last>
+                        <Item floatingLabel>
                             <Label>Jumlah</Label>
                             <Input 
                                 keyboardType = {'number-pad'}
