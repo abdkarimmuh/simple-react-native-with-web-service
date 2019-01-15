@@ -22,7 +22,7 @@ import {
 
 import Api from '../../services/api';
 
-class BarangDetail extends Component {
+class BarangEdit extends Component {
 
     constructor(props){
         super(props)
@@ -33,17 +33,17 @@ class BarangDetail extends Component {
             count: '',
             selected: '',
             error: false,
+            isLoading: true,
         }
     }
 
     componentDidMount = () => {
         this._retrieveData()
-        this.getKategori()
     }
 
     componentWillReceiveProps = () => {
         this._retrieveData()
-        this.getKategori()
+        console.log('Selected: ' + this.state.selected)
     }
 
     onValueChange(value) {
@@ -58,6 +58,7 @@ class BarangDetail extends Component {
             name: '',
             count: '',
             selected: '',
+            isLoading: true,
         })
         this.props.navigation.navigate('Barang')
     }
@@ -67,7 +68,9 @@ class BarangDetail extends Component {
             const value = await AsyncStorage.getItem('idBarang');
             console.log('ID yang diterima: ' + value)
             if (value !== null) {
-                this.getBarangById(value);
+                await this.getBarangById(value);
+                await this.getKategori()
+                this.setState({ isLoading: false })
             }
         } catch (error) {
             console.log('ERR', error)
@@ -89,14 +92,14 @@ class BarangDetail extends Component {
     }
 
     getBarangById = async(id) => {
-        Api.create()
+        await Api.create()
         .getBarangById(id)
         .then(res => {
             this.setState({ 
                 id: res.data.data.id + '',
                 name: res.data.data.nama_barang + '',
                 count: res.data.data.count + '',
-                selected: res.data.data.id_kategori + ''
+                selected: res.data.data.id_kategori
             })
         })
         .catch(err => {
@@ -108,7 +111,7 @@ class BarangDetail extends Component {
     }
 
     getKategori = async() => {
-        Api.create()
+        await Api.create()
         .getKategori()
         .then(res => {
             this.setState({ kategori: res.data.data })
@@ -119,11 +122,10 @@ class BarangDetail extends Component {
                 error: true
             })
         })
-        this._retrieveData()
     }
 
     render() {
-        const { kategori, name, count, selected, id } = this.state;
+        const { kategori, name, count, selected, id, isLoading } = this.state;
         return (
             <Container>
                 <Header>
@@ -156,22 +158,26 @@ class BarangDetail extends Component {
                         </Item>
                     </Form>
                     <Form>
-                        <Picker
-                            mode = 'dropdown'
-                            iosIcon = { <Icon name = 'arrow-down' /> }
-                            placeholder = 'Pilih Kategori'
-                            placeholderStyle = {{ color: '#bfc6ea' }}
-                            placeholderIconColor = '#007aff'
-                            style = {{ width: undefined, marginTop: 16 }}
-                            selectedValue = { selected }
-                            onValueChange = { this.onValueChange.bind(this) }
-                        >
                         {
-                            kategori.map((d) => (
-                                <Picker.Item label = {d.name} value = {d.id} key = {d.id} />
-                            ))
+                            !isLoading
+                            &&
+                            <Picker
+                                mode = 'dropdown'
+                                iosIcon = { <Icon name = 'arrow-down' /> }
+                                placeholder = 'Pilih Kategori'
+                                placeholderStyle = {{ color: '#bfc6ea' }}
+                                placeholderIconColor = '#007aff'
+                                style = {{ width: undefined, marginTop: 16 }}
+                                selectedValue = { selected }
+                                onValueChange = { this.onValueChange.bind(this) }
+                            >
+                            {
+                                kategori.map((d) => (
+                                    <Picker.Item label = {d.name} value = {d.id} key = {d.id} />
+                                ))
+                            }
+                            </Picker>
                         }
-                        </Picker>
                     </Form>
                     <Body style = {{ marginTop: 32 }} >
                         <Button iconLeft primary
@@ -186,4 +192,4 @@ class BarangDetail extends Component {
     }
 }
 
-export default BarangDetail;
+export default BarangEdit;
